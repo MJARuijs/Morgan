@@ -36,7 +36,7 @@ fun main() {
     val box = ShadowBox(camera)
     ShadowRenderer.add(box)
 
-    val entity = Entity(Matrix4().scale(4.0f, 4.0f, 4.0f), ModelCache.get("models/duck.dae"))
+    val entity = Entity(Matrix4(), ModelCache.get("models/house.obj"))
     val entities = ArrayList<Entity>()
     entities += entity
 
