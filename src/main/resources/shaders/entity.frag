@@ -43,7 +43,7 @@ uniform vec2 shadowMapSize;
 uniform sampler2D shadowMap;
 
 layout(location = 0) out vec4 outColor;
-layout(location = 1) out vec4 outColor1;
+//layout(location = 1) out vec4 outColor1;
 
 vec4 computeAmbientColor() {
     if (material.textured) {
@@ -110,6 +110,6 @@ void main() {
 
         outColor = ambientColor + directionalColor * lightFactor;
         outColor = clamp(outColor, 0.0, 1.0);
-        outColor1 = vec4(1.0, 0.0, 0.0, 1.0);
+//        outColor = vec4(1.0, 0.0, 0.0, 1.0);
     }
 }

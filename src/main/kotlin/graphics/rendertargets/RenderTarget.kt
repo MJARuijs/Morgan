@@ -13,7 +13,6 @@ class RenderTarget(private var width: Int, private var height: Int, vararg types
     private var attachments: List<Attachment> = ArrayList()
 
     private val handle = glGenFramebuffers()
-    private var available = true
 
     init {
         glBindFramebuffer(GL_FRAMEBUFFER, handle)
@@ -71,10 +70,7 @@ class RenderTarget(private var width: Int, private var height: Int, vararg types
 
     fun getAspectRatio() = width.toFloat() / height.toFloat()
 
-    fun isAvailable() = available
-
     fun start() {
-        available = false
         glBindFramebuffer(GL_FRAMEBUFFER, handle)
         glViewport(0, 0, width, height)
     }
@@ -92,7 +88,8 @@ class RenderTarget(private var width: Int, private var height: Int, vararg types
 
     fun stop() {
         glBindFramebuffer(GL_FRAMEBUFFER, 0)
-        available = true
+//        glViewport(0, 0, width, height)
+
     }
 
     fun getColorMap(index: Int = 0): ColorMap {

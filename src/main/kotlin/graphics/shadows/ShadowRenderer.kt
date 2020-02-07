@@ -6,7 +6,6 @@ import com.blazeit.game.graphics.GraphicsContext
 import com.blazeit.game.graphics.GraphicsOption
 import com.blazeit.game.graphics.lights.DirectionalLight
 import com.blazeit.game.graphics.rendertargets.RenderTarget
-import com.blazeit.game.graphics.rendertargets.RenderTargetManager
 import com.blazeit.game.graphics.rendertargets.attachments.AttachmentType
 import com.blazeit.game.graphics.shaders.ShaderProgram
 import com.blazeit.game.graphics.shadows.ShadowBox
@@ -18,7 +17,8 @@ object ShadowRenderer {
 
     private val shaderProgram = ShaderProgram.load("shaders/shadow.vert", "shaders/shadow.frag")
     private val boxes = ArrayList<ShadowBox>()
-    private lateinit var renderTarget: RenderTarget
+    private val renderTarget = RenderTarget(4096, 4096, AttachmentType.DEPTH_TEXTURE)
+//    private lateinit var renderTarget: RenderTarget
 
     fun add(vararg boxes: ShadowBox) = ShadowRenderer.boxes.addAll(boxes)
 
@@ -26,7 +26,7 @@ object ShadowRenderer {
 
         val shadowData = ArrayList<ShadowData>()
 
-        renderTarget = RenderTargetManager.getAvailableTarget(AttachmentType.DEPTH_TEXTURE, width = 4096, height = 4096)
+//        renderTarget = RenderTargetManager.getAvailableTarget(AttachmentType.DEPTH_TEXTURE, width = 4096, height = 4096)
         renderTarget.start()
         renderTarget.clear()
 

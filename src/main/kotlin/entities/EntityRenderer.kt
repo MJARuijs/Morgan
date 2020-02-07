@@ -3,6 +3,8 @@ package com.blazeit.game.entities
 import com.blazeit.game.graphics.Camera
 import com.blazeit.game.graphics.lights.AmbientLight
 import com.blazeit.game.graphics.lights.DirectionalLight
+import com.blazeit.game.graphics.rendertargets.RenderTarget
+import com.blazeit.game.graphics.rendertargets.attachments.AttachmentType
 import com.blazeit.game.graphics.samplers.Sampler
 import com.blazeit.game.graphics.shaders.ShaderProgram
 import com.blazeit.game.graphics.shadows.ShadowData
@@ -15,8 +17,12 @@ object EntityRenderer {
 
     private val shaderProgram = ShaderProgram.load("shaders/entity.vert", "shaders/entity.frag")
     private val blackProgram = ShaderProgram.load("shaders/shadow.vert", "shaders/shadow.frag")
+    private val renderTarget = RenderTarget(960, 540, AttachmentType.COLOR_TEXTURE, AttachmentType.DEPTH_TEXTURE)
 
     fun render(camera: Camera, entities: List<Entity>, ambient: AmbientLight, directional: DirectionalLight, shadows: List<ShadowData> = ArrayList(), waterPlane: Vector4 = Vector4()) {
+
+        renderTarget.start()
+        renderTarget.clear()
 
         shaderProgram.start()
 
@@ -60,6 +66,9 @@ object EntityRenderer {
         }
 
         shaderProgram.stop()
+
+        renderTarget.stop()
+        renderTarget.renderToScreen()
     }
 
     fun renderBlack(camera: Camera, entities: List<Entity>) {
