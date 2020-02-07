@@ -8,10 +8,12 @@ import com.blazeit.game.graphics.GraphicsContext
 import com.blazeit.game.graphics.GraphicsOption.*
 import com.blazeit.game.graphics.lights.AmbientLight
 import com.blazeit.game.graphics.lights.DirectionalLight
+import com.blazeit.game.graphics.models.ModelCache
 import com.blazeit.game.graphics.rendertargets.RenderTargetManager
 import com.blazeit.game.graphics.shadows.ShadowBox
 import graphics.shadows.ShadowRenderer
 import com.blazeit.game.math.Color
+import com.blazeit.game.math.matrices.Matrix4
 import com.blazeit.game.math.vectors.Vector3
 import com.blazeit.game.math.vectors.Vector4
 import org.lwjgl.opengl.GL11.*
@@ -24,7 +26,7 @@ fun main() {
     val mouse = Mouse(window)
     val timer = Timer()
 
-    GraphicsContext.init(Color(0f, 0f, 0f))
+    GraphicsContext.init(Color(0.25f, 0.25f, 0.25f))
     GraphicsContext.enable(DEPTH_TESTING, FACE_CULLING, TEXTURE_MAPPING)
 
     val camera = Camera(aspectRatio = window.getAspectRatio())
@@ -33,10 +35,12 @@ fun main() {
 
     RenderTargetManager.setWindow(window)
 
-    val entities = ArrayList<Entity>()
-
     val box = ShadowBox(camera)
     ShadowRenderer.add(box)
+
+    val entity = Entity(Matrix4(), ModelCache.get("models/cube.dae"))
+    val entities = ArrayList<Entity>()
+    entities += entity
 
     mouse.capture()
     window.show()
@@ -55,6 +59,8 @@ fun main() {
                 mouse.capture()
             }
         }
+
+        println(camera.position)
 
         val shadows = ShadowRenderer.render(camera, entities, light)
 
