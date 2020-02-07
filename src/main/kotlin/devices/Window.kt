@@ -95,11 +95,17 @@ class Window(title: String) {
         }
 
         glfwSetCursorPosCallback(identifier) { _, x: Double, y: Double ->
-            mouse.moved = (mouse.x != x) || (mouse.y != y)
-            mouse.dx = x - mouse.x
-            mouse.dy = y - mouse.y
-            mouse.x = x
-            mouse.y = y
+
+            val scaledX = (x - width / 2) / width
+            val scaledY = -(y - height / 2) / height
+
+            mouse.moved = (mouse.x != scaledX) || (mouse.y != scaledY)
+
+            mouse.dx = scaledX - mouse.x
+            mouse.dy = scaledY - mouse.y
+
+            mouse.x = scaledX
+            mouse.y = scaledY
         }
 
         glfwMakeContextCurrent(identifier)

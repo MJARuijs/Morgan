@@ -30,16 +30,14 @@ fun main() {
     GraphicsContext.enable(DEPTH_TESTING, FACE_CULLING, TEXTURE_MAPPING)
 
     val camera = Camera(aspectRatio = window.aspectRatio)
-    val light = DirectionalLight(Color(1.0f, 1.0f, 1.0f), Vector3(0.0f, 1.0f, -1.0f))
+    val light = DirectionalLight(Color(1.0f, 1.0f, 1.0f), Vector3(0.5f, 0.75f, -1.0f))
     val ambient = AmbientLight(Color(0.25f, 0.25f, 0.25f))
-
-//    RenderTargetManager.setWindow(window)
 
     val box = ShadowBox(camera)
     ShadowRenderer.add(box)
 
     window.capture()
-    val entity = Entity(Matrix4(), ModelCache.get("models/duck.dae"))
+    val entity = Entity(Matrix4().scale(4.0f, 4.0f, 4.0f), ModelCache.get("models/duck.dae"))
     val entities = ArrayList<Entity>()
     entities += entity
 
@@ -63,14 +61,10 @@ fun main() {
         }
 
         val shadows = ShadowRenderer.render(camera, entities, light)
-//        val renderTarget = RenderTargetManager.default()
-//        renderTarget.start()
-//        renderTarget.clear()
-//        renderTarget.stop()
+
         EntityRenderer.render(camera, entities, ambient, light, shadows, Vector4())
 
         window.synchronize()
-//        RenderTargetManager.update(window)
         timer.update()
     }
 
