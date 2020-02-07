@@ -65,7 +65,7 @@ object EntityRenderer {
         shaderProgram.stop()
 
         renderTarget.stop()
-//        renderTarget.renderToScreen()
+        renderTarget.renderToScreen()
 
         return renderTarget
     }

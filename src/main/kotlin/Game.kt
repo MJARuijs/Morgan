@@ -72,6 +72,7 @@ fun main() {
         shadowMapTexture.render(uiProgram, shadows[0].shadowMap.handle)
         depthTexture.render(uiProgram, target.getDepthMap().handle)
 
+        uiProgram.stop()
         // Update devices
 
         window.synchronize()
