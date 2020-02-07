@@ -1,9 +1,8 @@
 package com.blazeit.game.graphics.rendertargets.attachments
 
 import com.blazeit.game.graphics.textures.ColorMap
-import org.lwjgl.opengl.GL11.GL_RGBA8
-import org.lwjgl.opengl.GL20.glDrawBuffers
-import org.lwjgl.opengl.GL30.*
+import org.lwjgl.opengl.GL30.GL_COLOR_ATTACHMENT0
+import org.lwjgl.opengl.GL30.GL_FRAMEBUFFER
 import org.lwjgl.opengl.GL32.glFramebufferTexture
 
 class ColorTextureAttachment(val index: Int, width: Int, height: Int) : Attachment {

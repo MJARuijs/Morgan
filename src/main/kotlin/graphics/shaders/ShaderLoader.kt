@@ -1,7 +1,7 @@
 package com.blazeit.game.graphics.shaders
 
-import com.blazeit.game.util.File
 import com.blazeit.game.resources.Loader
+import com.blazeit.game.util.File
 
 class ShaderLoader: Loader<Shader> {
 

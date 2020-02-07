@@ -5,7 +5,6 @@ import com.blazeit.game.graphics.rendertargets.attachments.AttachmentType.*
 import com.blazeit.game.graphics.textures.ColorMap
 import com.blazeit.game.graphics.textures.DepthMap
 import org.lwjgl.BufferUtils.createIntBuffer
-import org.lwjgl.opengl.GL11.*
 import org.lwjgl.opengl.GL20.glDrawBuffers
 import org.lwjgl.opengl.GL30.*
 

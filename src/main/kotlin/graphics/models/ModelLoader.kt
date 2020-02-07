@@ -9,8 +9,8 @@ import com.blazeit.game.math.matrices.Matrix3
 import com.blazeit.game.math.matrices.Matrix4
 import com.blazeit.game.math.vectors.Vector2
 import com.blazeit.game.math.vectors.Vector3
-import com.blazeit.game.util.File
 import com.blazeit.game.resources.Loader
+import com.blazeit.game.util.File
 import org.lwjgl.BufferUtils
 import org.lwjgl.assimp.*
 import org.lwjgl.assimp.Assimp.*

@@ -1,85 +1,53 @@
-package com.blazeit.game.devices
+package devices
 
-import org.lwjgl.glfw.GLFW.*
-import org.lwjgl.glfw.GLFWKeyCallback
+import java.util.*
+import kotlin.collections.HashSet
 
-/**
- * Construct w keyboard instance that keeps track of all key states associated with the physical keyboard used by the
- * user. It uses w window to be able to track all events posted by the system.
- * @param window the window to be attached to.
- * @constructor
- */
-class Keyboard(window: Window) {
+class Keyboard {
 
-    private class KeyCallback(private val keyboard: Keyboard): GLFWKeyCallback() {
+    private data class Event(val key: Key, val action: Action)
 
-        override fun invoke(handle: Long, key: Int, scancode: Int, action: Int, mods: Int) {
-            if (keyboard.handle == handle) {
-                when (action) {
-                    GLFW_PRESS -> {
-                        keyboard.keyStates[key] = true
-                        keyboard.pressed.add(key)
-                    }
-                    GLFW_RELEASE -> {
-                        keyboard.keyStates[key] = false
-                        keyboard.released.add(key)
-                    }
-                    GLFW_REPEAT -> {
-                        keyboard.keyStates[key] = true
-                        keyboard.repeated.add(key)
-                    }
-                    else -> throw Exception("Unknown key action")
-                }
-            }
-        }
+    private val events = ArrayDeque<Event>()
 
-    }
+    private val pressed = HashSet<Key>()
+    private val released = HashSet<Key>()
+    private val repeated = HashSet<Key>()
+    private val down = HashSet<Key>()
 
-    private val handle = window.getHandle()
+    internal fun post(key: Key, action: Action) = events.push(Event(key, action))
 
-    private val keyStates = HashMap<Int, Boolean>()
-    private val pressed = HashSet<Int>()
-    private val released = HashSet<Int>()
-    private val repeated = HashSet<Int>()
+    fun isPressed(key: Key) = pressed.contains(key)
 
-    init {
-        val keyCallback = KeyCallback(this)
-        glfwSetKeyCallback(handle, keyCallback)
-    }
+    fun isReleased(key: Key) = released.contains(key)
 
-    /**
-     * Update the keyboard. Should be called before polling for GLFW events.
-     */
-    fun update() {
+    fun isRepeated(key: Key) = repeated.contains(key)
+
+    fun isDown(key: Key) = down.contains(key)
+
+    fun poll() {
+
         pressed.clear()
         released.clear()
         repeated.clear()
-    }
 
-    /**
-     * @return whether the requested key is currently down.
-     */
-    fun isDown(key: Key) = keyStates.getOrElse(key.code) { false }
+        while (events.isNotEmpty()) {
+            val event = events.poll()
+            when (event.action) {
 
-    /**
-     * @return whether the requested key was pressed during the last frame.
-     */
-    fun isPressed(key: Key) = pressed.contains(key.code)
+                Action.PRESS -> {
+                    pressed.add(event.key)
+                    down.add(event.key)
+                }
 
-    /**
-     * @return whether the requested key was released during the last frame.
-     */
-    fun isReleased(key: Key) = released.contains(key.code)
+                Action.RELEASE -> {
+                    released.add(event.key)
+                    down.remove(event.key)
+                }
 
-    /**
-     * @return whether the requested key was repeated during the last frame.
-     */
-    fun isRepeated(key: Key) = repeated.contains(key.code)
-
-    /**
-     * Destroy the keyboard by releasing its internal callbacks used for listening to events.
-     */
-    fun destroy() {
-        glfwSetKeyCallback(handle, null)
+                Action.REPEAT -> {
+                    repeated.add(event.key)
+                }
+            }
+        }
     }
 }
