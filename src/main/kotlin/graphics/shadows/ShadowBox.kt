@@ -41,7 +41,6 @@ class ShadowBox(camera: Camera, val maxDistance: Float = 10f) {
     private var viewMatrix = Matrix4()
 
     init {
-//        val ratio = RenderTargetManager.default().getAspectRatio()
         val ratio = camera.aspectRatio
         nearHeight = nearWidth / ratio
         farHeight = farWidth / ratio
@@ -54,121 +53,121 @@ class ShadowBox(camera: Camera, val maxDistance: Float = 10f) {
     fun depth() = if (maxZ > minZ) maxZ - minZ else maxZ - minZ
 
     fun updateBox(camera: Camera, light: DirectionalLight) {
-//        val position = camera.position
+        val position = camera.position
 
-//        val lightDirection = -light.direction
-//        val horizontalDirection = -light.direction.xz()
-//
-//        horizontalDirection.normalize()
-//        lightDirection.normalize()
-//
-//        val xRotation = asin(-lightDirection.y)
-//        val yRotation = if (horizontalDirection.x == 0.0f && horizontalDirection.y <= 0.0f){
-//            0.0f
-//        } else if (horizontalDirection.x == 0.0f && horizontalDirection.y > 0.0f) {
-//            PI.toFloat()
-//        } else if (horizontalDirection.x < 0.0f) {
-//            -acos(-horizontalDirection.y)
-//        } else {
-//            acos(-horizontalDirection.y)
-//        }
-//
-//        var lightRotation = Matrix4()
-//        lightRotation = lightRotation.rotateX(xRotation)
-//        lightRotation = lightRotation.rotateY(yRotation)
-//
-//        var inverseLightDirection = Matrix4()
-//        inverseLightDirection = inverseLightDirection.rotateY(-yRotation)
-//        inverseLightDirection = inverseLightDirection.rotateX(-xRotation)
+        val lightDirection = -light.direction
+        val horizontalDirection = -light.direction.xz()
 
-//        val cameraRotation = camera.rotationMatrix
-//        val totalRotation = lightRotation dot cameraRotation
-//
-//        val nearMinX = -nearWidth / 2.0f
-//        val nearMaxX = nearWidth / 2.0f
-//
-//        val nearMinY = -nearHeight / 2.0f
-//        val nearMaxY = nearHeight / 2.0f
-//        val farMinY = -farHeight / 2.0f
-//        val farMaxY = farHeight / 2.0f
-//
-//        val farMaxX = farWidth / 2.0f
-//        val farMinX = -farWidth / 2.0f
-//
-//        nearRightUp = Vector3(nearMaxX, nearMaxY, -camera.zNear + offset)
-//        nearLeftUp = Vector3(nearMinX, nearMaxY, -camera.zNear + offset)
-//        nearLeftDown = Vector3(nearMinX, nearMinY, -camera.zNear + offset)
-//        nearRightDown = Vector3(nearMaxX, nearMinY, -camera.zNear + offset)
-//        farRightUp = Vector3(farMaxX, farMaxY, -maxDistance)
-//        farLeftUp = Vector3(farMinX, farMaxY, -maxDistance)
-//        farLeftDown = Vector3(farMinX, farMinY, -maxDistance)
-//        farRightDown = Vector3(farMaxX, farMinY, -maxDistance)
-//
-//        nearRightUp = (totalRotation dot Vector4(nearRightUp, 1.0f)).xyz()
-//        nearLeftUp = (totalRotation dot Vector4(nearLeftUp, 1.0f)).xyz()
-//        nearLeftDown = (totalRotation dot Vector4(nearLeftDown, 1.0f)).xyz()
-//        nearRightDown = (totalRotation dot Vector4(nearRightDown, 1.0f)).xyz()
-//        farRightUp = (totalRotation dot Vector4(farRightUp, 1.0f)).xyz()
-//        farLeftUp = (totalRotation dot Vector4(farLeftUp, 1.0f)).xyz()
-//        farLeftDown = (totalRotation dot Vector4(farLeftDown, 1.0f)).xyz()
-//        farRightDown = (totalRotation dot Vector4(farRightDown, 1.0f)).xyz()
-//
-//        val minNearX = min(nearLeftDown.x, min(nearRightDown.x, min(nearLeftUp.x, nearRightUp.x)))
-//        val minFarX = min(farLeftDown.x, min(farRightDown.x, min(farLeftUp.x, farRightUp.x)))
-//        minX = min(minNearX, minFarX)
-//
-//        val maxNearX = max(nearLeftDown.x, max(nearRightDown.x, max(nearLeftUp.x, nearRightUp.x)))
-//        val maxFarX = max(farLeftDown.x, max(farRightDown.x, max(farLeftUp.x, farRightUp.x)))
-//        maxX = max(maxNearX, maxFarX)
-//
-//        val minNearY = min(nearLeftDown.y, min(nearRightDown.y, min(nearLeftUp.y, nearRightUp.y)))
-//        val minFarY = min(farLeftDown.y, min(farRightDown.y, min(farLeftUp.y, farRightUp.y)))
-//        minY = min(minNearY, minFarY)
-//
-//        val maxNearY = max(nearLeftDown.y, max(nearRightDown.y, max(nearLeftUp.y, nearRightUp.y)))
-//        val maxFarY = max(farLeftDown.y, max(farRightDown.y, max(farLeftUp.y, farRightUp.y)))
-//        maxY = max(maxNearY, maxFarY)
-//
-//        val minNearZ = min(nearLeftDown.z, min(nearRightDown.z, min(nearLeftUp.z, nearRightUp.z)))
-//        val minFarZ = min(farLeftDown.z, min(farRightDown.z, min(farLeftUp.z, farRightUp.z)))
-//        minZ = min(minNearZ, minFarZ)
-//
-//        val maxNearZ = max(nearLeftDown.z, max(nearRightDown.z, max(nearLeftUp.z, nearRightUp.z)))
-//        val maxFarZ = max(farLeftDown.z, max(farRightDown.z, max(farLeftUp.z, farRightUp.z)))
-//        maxZ = max(maxNearZ, maxFarZ)
-//
-//        nearRightUp = (inverseLightDirection dot Vector4(nearRightUp, 1.0f)).xyz()
-//        nearLeftUp = (inverseLightDirection dot Vector4(nearLeftUp, 1.0f)).xyz()
-//        nearLeftDown = (inverseLightDirection dot Vector4(nearLeftDown, 1.0f)).xyz()
-//        nearRightDown = (inverseLightDirection dot Vector4(nearRightDown, 1.0f)).xyz()
-//        farRightUp = (inverseLightDirection dot Vector4(farRightUp, 1.0f)).xyz()
-//        farLeftUp = (inverseLightDirection dot Vector4(farLeftUp, 1.0f)).xyz()
-//        farLeftDown = (inverseLightDirection dot Vector4(farLeftDown, 1.0f)).xyz()
-//        farRightDown = (inverseLightDirection dot Vector4(farRightDown, 1.0f)).xyz()
-//
-//        nearRightUp += position
-//        nearLeftUp += position
-//        nearLeftDown += position
-//        nearRightDown += position
-//        farRightUp += position
-//        farLeftUp += position
-//        farLeftDown += position
-//        farRightDown += position
-//
-//        val x = (maxX + minX) / 2.0f
-//        val y = (maxY + minY) / 2.0f
-//        val z = maxZ
+        horizontalDirection.normalize()
+        lightDirection.normalize()
 
-//        translation = Vector3(x, y, z)
-//        translation = (inverseLightDirection dot Vector4(translation, 1.0f)).xyz()
-//        translation += position
-//
-//        center.x = (maxX + minX) / 2.0f
-//        center.y = (maxY + minY) / 2.0f
-//        center.z = (maxZ + minZ) / 2.0f
+        val xRotation = asin(-lightDirection.y)
+        val yRotation = if (horizontalDirection.x == 0.0f && horizontalDirection.y <= 0.0f){
+            0.0f
+        } else if (horizontalDirection.x == 0.0f && horizontalDirection.y > 0.0f) {
+            PI.toFloat()
+        } else if (horizontalDirection.x < 0.0f) {
+            -acos(-horizontalDirection.y)
+        } else {
+            acos(-horizontalDirection.y)
+        }
 
-//        updateViewMatrix(light)
-//        updateProjectionMatrix()
+        var lightRotation = Matrix4()
+        lightRotation = lightRotation.rotateX(xRotation)
+        lightRotation = lightRotation.rotateY(yRotation)
+
+        var inverseLightDirection = Matrix4()
+        inverseLightDirection = inverseLightDirection.rotateY(-yRotation)
+        inverseLightDirection = inverseLightDirection.rotateX(-xRotation)
+
+        val cameraRotation = camera.rotationMatrix
+        val totalRotation = lightRotation dot cameraRotation
+
+        val nearMinX = -nearWidth / 2.0f
+        val nearMaxX = nearWidth / 2.0f
+
+        val nearMinY = -nearHeight / 2.0f
+        val nearMaxY = nearHeight / 2.0f
+        val farMinY = -farHeight / 2.0f
+        val farMaxY = farHeight / 2.0f
+
+        val farMaxX = farWidth / 2.0f
+        val farMinX = -farWidth / 2.0f
+
+        nearRightUp = Vector3(nearMaxX, nearMaxY, -camera.zNear + offset)
+        nearLeftUp = Vector3(nearMinX, nearMaxY, -camera.zNear + offset)
+        nearLeftDown = Vector3(nearMinX, nearMinY, -camera.zNear + offset)
+        nearRightDown = Vector3(nearMaxX, nearMinY, -camera.zNear + offset)
+        farRightUp = Vector3(farMaxX, farMaxY, -maxDistance)
+        farLeftUp = Vector3(farMinX, farMaxY, -maxDistance)
+        farLeftDown = Vector3(farMinX, farMinY, -maxDistance)
+        farRightDown = Vector3(farMaxX, farMinY, -maxDistance)
+
+        nearRightUp = (totalRotation dot Vector4(nearRightUp, 1.0f)).xyz()
+        nearLeftUp = (totalRotation dot Vector4(nearLeftUp, 1.0f)).xyz()
+        nearLeftDown = (totalRotation dot Vector4(nearLeftDown, 1.0f)).xyz()
+        nearRightDown = (totalRotation dot Vector4(nearRightDown, 1.0f)).xyz()
+        farRightUp = (totalRotation dot Vector4(farRightUp, 1.0f)).xyz()
+        farLeftUp = (totalRotation dot Vector4(farLeftUp, 1.0f)).xyz()
+        farLeftDown = (totalRotation dot Vector4(farLeftDown, 1.0f)).xyz()
+        farRightDown = (totalRotation dot Vector4(farRightDown, 1.0f)).xyz()
+
+        val minNearX = min(nearLeftDown.x, min(nearRightDown.x, min(nearLeftUp.x, nearRightUp.x)))
+        val minFarX = min(farLeftDown.x, min(farRightDown.x, min(farLeftUp.x, farRightUp.x)))
+        minX = min(minNearX, minFarX)
+
+        val maxNearX = max(nearLeftDown.x, max(nearRightDown.x, max(nearLeftUp.x, nearRightUp.x)))
+        val maxFarX = max(farLeftDown.x, max(farRightDown.x, max(farLeftUp.x, farRightUp.x)))
+        maxX = max(maxNearX, maxFarX)
+
+        val minNearY = min(nearLeftDown.y, min(nearRightDown.y, min(nearLeftUp.y, nearRightUp.y)))
+        val minFarY = min(farLeftDown.y, min(farRightDown.y, min(farLeftUp.y, farRightUp.y)))
+        minY = min(minNearY, minFarY)
+
+        val maxNearY = max(nearLeftDown.y, max(nearRightDown.y, max(nearLeftUp.y, nearRightUp.y)))
+        val maxFarY = max(farLeftDown.y, max(farRightDown.y, max(farLeftUp.y, farRightUp.y)))
+        maxY = max(maxNearY, maxFarY)
+
+        val minNearZ = min(nearLeftDown.z, min(nearRightDown.z, min(nearLeftUp.z, nearRightUp.z)))
+        val minFarZ = min(farLeftDown.z, min(farRightDown.z, min(farLeftUp.z, farRightUp.z)))
+        minZ = min(minNearZ, minFarZ)
+
+        val maxNearZ = max(nearLeftDown.z, max(nearRightDown.z, max(nearLeftUp.z, nearRightUp.z)))
+        val maxFarZ = max(farLeftDown.z, max(farRightDown.z, max(farLeftUp.z, farRightUp.z)))
+        maxZ = max(maxNearZ, maxFarZ)
+
+        nearRightUp = (inverseLightDirection dot Vector4(nearRightUp, 1.0f)).xyz()
+        nearLeftUp = (inverseLightDirection dot Vector4(nearLeftUp, 1.0f)).xyz()
+        nearLeftDown = (inverseLightDirection dot Vector4(nearLeftDown, 1.0f)).xyz()
+        nearRightDown = (inverseLightDirection dot Vector4(nearRightDown, 1.0f)).xyz()
+        farRightUp = (inverseLightDirection dot Vector4(farRightUp, 1.0f)).xyz()
+        farLeftUp = (inverseLightDirection dot Vector4(farLeftUp, 1.0f)).xyz()
+        farLeftDown = (inverseLightDirection dot Vector4(farLeftDown, 1.0f)).xyz()
+        farRightDown = (inverseLightDirection dot Vector4(farRightDown, 1.0f)).xyz()
+
+        nearRightUp += position
+        nearLeftUp += position
+        nearLeftDown += position
+        nearRightDown += position
+        farRightUp += position
+        farLeftUp += position
+        farLeftDown += position
+        farRightDown += position
+
+        val x = (maxX + minX) / 2.0f
+        val y = (maxY + minY) / 2.0f
+        val z = maxZ
+
+        translation = Vector3(x, y, z)
+        translation = (inverseLightDirection dot Vector4(translation, 1.0f)).xyz()
+        translation += position
+
+        center.x = (maxX + minX) / 2.0f
+        center.y = (maxY + minY) / 2.0f
+        center.z = (maxZ + minZ) / 2.0f
+
+        updateViewMatrix(light)
+        updateProjectionMatrix()
     }
 
     private fun updateProjectionMatrix() {

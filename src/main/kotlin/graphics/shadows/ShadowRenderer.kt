@@ -18,7 +18,6 @@ object ShadowRenderer {
     private val shaderProgram = ShaderProgram.load("shaders/shadow.vert", "shaders/shadow.frag")
     private val boxes = ArrayList<ShadowBox>()
     private val renderTarget = RenderTarget(4096, 4096, AttachmentType.DEPTH_TEXTURE)
-//    private lateinit var renderTarget: RenderTarget
 
     fun add(vararg boxes: ShadowBox) = ShadowRenderer.boxes.addAll(boxes)
 
@@ -26,7 +25,6 @@ object ShadowRenderer {
 
         val shadowData = ArrayList<ShadowData>()
 
-//        renderTarget = RenderTargetManager.getAvailableTarget(AttachmentType.DEPTH_TEXTURE, width = 4096, height = 4096)
         renderTarget.start()
         renderTarget.clear()
 

@@ -79,7 +79,5 @@ class Camera(
         rotation.x = (-mouse.y.toFloat() * mouseSpeed) % (2.0f * PI.toFloat())
         rotation.x = min(max(-PI.toFloat() / 2.0f, rotation.x), PI.toFloat() / 2.0f)
         rotation.y = (mouse.x.toFloat() * mouseSpeed) % (2.0f * PI.toFloat())
-
-//        println(rotation)
     }
 }
