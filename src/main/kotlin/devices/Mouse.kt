@@ -1,9 +1,40 @@
 package devices
 
+import org.lwjgl.glfw.GLFW.*
 import java.util.*
 import kotlin.collections.HashSet
 
-class Mouse {
+class Mouse(private val window: Window) {
+
+    init {
+
+        glfwSetMouseButtonCallback(window.handle) { _, buttonInt: Int, actionInt: Int, _ ->
+
+            val button = Button.fromInt(buttonInt)
+            val action = Action.fromInt(actionInt)
+
+            if (button != null && action != null) {
+                val event = Event(button, action)
+                events.push(event)
+            }
+        }
+
+        glfwSetCursorPosCallback(window.handle) { _, newX: Double, newY: Double ->
+
+            val scaledX = (newX - window.width / 2) / window.width
+            val scaledY = -(newY - window.height / 2) / window.height
+
+            moved = (x != scaledX) || (y != scaledY)
+
+            dx = scaledX - x
+            dy = scaledY - y
+
+            x = scaledX
+            y = scaledY
+        }
+
+        glfwSetInputMode(window.handle, GLFW_CURSOR, GLFW_CURSOR_DISABLED)
+    }
 
     private data class Event(val button: Button, val action: Action)
 
@@ -12,8 +43,6 @@ class Mouse {
     private val pressed = HashSet<Button>()
     private val released = HashSet<Button>()
     private val down = HashSet<Button>()
-
-    internal fun post(button: Button, action: Action) = events.push(Event(button, action))
 
     var x = 0.0
         internal set
@@ -38,6 +67,8 @@ class Mouse {
     fun isReleased(button: Button) = released.contains(button)
 
     fun isDown(button: Button) = down.contains(button)
+
+    internal fun post(button: Button, action: Action) = events.push(Event(button, action))
 
     fun poll() {
 

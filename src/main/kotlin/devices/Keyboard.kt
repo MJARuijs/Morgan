@@ -1,9 +1,24 @@
 package devices
 
+import org.lwjgl.glfw.GLFW.glfwSetKeyCallback
 import java.util.*
 import kotlin.collections.HashSet
 
-class Keyboard {
+class Keyboard(private val window: Window) {
+
+    init {
+
+        glfwSetKeyCallback(window.handle) { _, keyInt: Int, _, actionInt: Int, _ ->
+
+            val key = Key.fromInt(keyInt)
+            val action = Action.fromInt(actionInt)
+
+            if (key != null && action != null) {
+                val event = Event(key, action)
+                events.push(event)
+            }
+        }
+    }
 
     private data class Event(val key: Key, val action: Action)
 
@@ -13,8 +28,6 @@ class Keyboard {
     private val released = HashSet<Key>()
     private val repeated = HashSet<Key>()
     private val down = HashSet<Key>()
-
-    internal fun post(key: Key, action: Action) = events.push(Event(key, action))
 
     fun isPressed(key: Key) = pressed.contains(key)
 

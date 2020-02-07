@@ -41,13 +41,11 @@ fun main() {
     val box = ShadowBox(camera)
     ShadowRenderer.add(box)
 
-    window.capture()
     val entity = Entity(Matrix4().scale(4.0f, 4.0f, 4.0f), ModelCache.get("models/duck.dae"))
     val entities = ArrayList<Entity>()
     entities += entity
 
     timer.reset()
-    window.capture()
 
     val standardTexture = Texture(Vector2(0.5f, 0.5f), Vector2(0.5f, 0.5f), false)
     val depthTexture = Texture(Vector2(-0.5f, 0.5f), Vector2(0.5f, 0.5f), true)
@@ -55,19 +53,15 @@ fun main() {
 
     while (window.running) {
 
-        window.poll()
+        // Process input
 
-        glClear(GL_COLOR_BUFFER_BIT or GL_DEPTH_BUFFER_BIT)
+        if (keyboard.isPressed(Key.ESCAPE)) {
+            break
+        }
 
         camera.update(keyboard, mouse, timer.getDelta())
 
-        if (keyboard.isPressed(Key.ESCAPE)) {
-            if (mouse.captured) {
-                window.release()
-            } else {
-                window.capture()
-            }
-        }
+        // Render scene
 
         val shadows = ShadowRenderer.render(camera, entities, light)
 
@@ -78,7 +72,11 @@ fun main() {
         shadowMapTexture.render(uiProgram, shadows[0].shadowMap.handle)
         depthTexture.render(uiProgram, target.getDepthMap().handle)
 
+        // Update devices
+
         window.synchronize()
+        window.poll()
+
         timer.update()
     }
 
