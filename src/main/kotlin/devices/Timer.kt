@@ -1,4 +1,4 @@
-package com.blazeit.game.devices
+package devices
 
 import org.lwjgl.glfw.GLFW.glfwGetTime
 

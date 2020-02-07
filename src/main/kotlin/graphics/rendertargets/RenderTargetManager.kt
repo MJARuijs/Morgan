@@ -1,7 +1,7 @@
 package com.blazeit.game.graphics.rendertargets
 
-import com.blazeit.game.devices.Window
 import com.blazeit.game.graphics.rendertargets.attachments.AttachmentType
+import devices.Window
 
 object RenderTargetManager {
 
@@ -14,28 +14,15 @@ object RenderTargetManager {
 
     fun setWindow(window: Window) {
         this.window = window
-        default = RenderTarget(window.getWidth(), window.getHeight(), AttachmentType.COLOR_TEXTURE, AttachmentType.DEPTH_TEXTURE)
+        default = RenderTarget(window.width, window.height, AttachmentType.COLOR_TEXTURE, AttachmentType.DEPTH_TEXTURE)
     }
 
     fun default() = default
 
     fun update(window: Window) {
 
-//        var toBeRemovedIndices = IntArray(0)
-
-//        renderTargets.forEach {
-//            if (it.unusedFrames++ > 10) {
-//                toBeRemovedIndices += renderTargets.indexOf(it)
-//            }
-//        }
-
-//        toBeRemovedIndices.forEach {
-//            renderTargets[it].renderTarget.destroy()
-//            renderTargets.removeAt(it)
-//        }
-
-        if (window.isResized()) {
-            renderTargets.forEach { it.renderTarget.resize(window.getWidth(), window.getHeight()) }
+        if (window.resized) {
+            renderTargets.forEach { it.renderTarget.resize(window.width, window.height) }
         }
     }
 
