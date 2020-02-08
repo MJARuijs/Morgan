@@ -1,6 +1,9 @@
-package com.blazeit.game.entities
+package com.blazeit.game.graphics.godrays
 
 import com.blazeit.game.graphics.Camera
+import com.blazeit.game.graphics.GraphicsContext
+import com.blazeit.game.graphics.GraphicsOption
+import com.blazeit.game.graphics.Plane
 import com.blazeit.game.graphics.lights.AmbientLight
 import com.blazeit.game.graphics.lights.DirectionalLight
 import com.blazeit.game.graphics.rendertargets.RenderTarget
@@ -8,18 +11,22 @@ import com.blazeit.game.graphics.rendertargets.attachments.AttachmentType
 import com.blazeit.game.graphics.samplers.Sampler
 import com.blazeit.game.graphics.shaders.ShaderProgram
 import com.blazeit.game.graphics.shadows.ShadowData
+import com.blazeit.game.math.matrices.Matrix4
 import com.blazeit.game.math.vectors.Vector2
 import com.blazeit.game.math.vectors.Vector4
 
-object EntityRenderer {
+object GodRayRenderer {
 
-    private val shaderProgram = ShaderProgram.load("shaders/entity.vert", "shaders/entity.frag")
+    private val shaderProgram = ShaderProgram.load("shaders/godray.vert", "shaders/godray.frag")
     private val renderTarget = RenderTarget(960, 540, AttachmentType.COLOR_TEXTURE, AttachmentType.DEPTH_TEXTURE)
 
-    fun render(camera: Camera, entities: List<Entity>, ambient: AmbientLight, directional: DirectionalLight, shadows: List<ShadowData> = ArrayList(), waterPlane: Vector4 = Vector4()): RenderTarget {
+    fun render(camera: Camera, shadows: List<ShadowData> = ArrayList()): RenderTarget {
 
         renderTarget.start()
         renderTarget.clear()
+
+        GraphicsContext.enable(GraphicsOption.ALPHA_BLENDING)
+        GraphicsContext.disable(GraphicsOption.DEPTH_TESTING)
 
         shaderProgram.start()
 
@@ -42,27 +49,23 @@ object EntityRenderer {
         shaderProgram.set("projection", camera.projectionMatrix)
         shaderProgram.set("view", camera.viewMatrix)
 
-        shaderProgram.set("ambient.color", ambient.color)
-
-        shaderProgram.set("sun.color", directional.color)
-        shaderProgram.set("sun.direction", directional.direction)
-
-        shaderProgram.set("waterPlane", waterPlane)
         shaderProgram.set("cameraPosition", camera.position)
 
-        for (entity in entities) {
-            val model = entity.model
-            val transformation = entity.transformation
+        val plane = Plane()
+        shaderProgram.set("levels", 100)
+
+        val inverse = camera.viewMatrix.inverse().scale(10.0f, 10.0f, 10.0f)
+
+        for (level in 0 until 100) {
+            val transformation = inverse.translate(0.0f, 0.0f, -0.1f * (level + 1))
             shaderProgram.set("model", transformation)
-            for (shape in model.shapes) {
-                shaderProgram.set("material.diffuseColor", shape.material.diffuse)
-                shaderProgram.set("material.specularColor", shape.material.specular)
-                shaderProgram.set("material.shininess", shape.material.shininess)
-                shape.mesh.draw()
-            }
+            plane.draw()
         }
 
         shaderProgram.stop()
+
+        GraphicsContext.disable(GraphicsOption.ALPHA_BLENDING)
+        GraphicsContext.enable(GraphicsOption.DEPTH_TESTING)
 
         renderTarget.stop()
 
