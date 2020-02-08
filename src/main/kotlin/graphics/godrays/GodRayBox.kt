@@ -8,7 +8,7 @@ import com.blazeit.game.graphics.models.meshes.Primitive
 import com.blazeit.game.math.vectors.Vector3
 import kotlin.math.*
 
-class GodRayBox(camera: Camera, val levels: Int, maxDistance: Float = 25f) {
+class GodRayBox(camera: Camera, val levels: Int, maxDistance: Float = 10f) {
 
     private val mesh: Mesh
 
