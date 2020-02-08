@@ -11,6 +11,10 @@ import com.blazeit.game.graphics.godrays.GodRayRenderer
 import com.blazeit.game.graphics.lights.AmbientLight
 import com.blazeit.game.graphics.lights.DirectionalLight
 import com.blazeit.game.graphics.models.ModelCache
+import com.blazeit.game.graphics.postprocessing.effects.GaussianBlur
+import com.blazeit.game.graphics.postprocessing.effects.HorizontalBlur
+import com.blazeit.game.graphics.postprocessing.effects.Overlay
+import com.blazeit.game.graphics.postprocessing.effects.VerticalBlur
 import com.blazeit.game.graphics.rendertargets.RenderTarget
 import com.blazeit.game.graphics.rendertargets.attachments.AttachmentType
 import com.blazeit.game.graphics.shaders.ShaderProgram
@@ -44,7 +48,7 @@ fun main() {
     val box = ShadowBox(camera)
     ShadowRenderer.add(box)
 
-    val godRayBox = GodRayBox(camera, 100)
+    val godRayBox = GodRayBox(camera, 200)
 
     val entity = Entity(Matrix4(), ModelCache.get("models/house.obj"))
     val entities = ArrayList<Entity>()
@@ -53,11 +57,21 @@ fun main() {
     timer.reset()
 
     val standardTexture = Texture(Vector2(0.5f, 0.5f), Vector2(0.5f, 0.5f), false)
-    val depthTexture = Texture(Vector2(-0.5f, 0.5f), Vector2(0.5f, 0.5f), true)
+    val depthTexture = Texture(Vector2(0.0f, 0.0f), Vector2(1.0f, 1.0f), false)
     val shadowMapTexture = Texture(Vector2(0.5f, -0.5f), Vector2(0.5f, 0.5f), true)
     val godRayTexture = Texture(Vector2(-0.5f, -0.5f), Vector2(0.5f, 0.5f), false)
 
     val userInterfaceTarget = RenderTarget(960, 540, AttachmentType.COLOR_TEXTURE)
+
+//    val blurredGodRayTexture = Texture(Vector2(-0.5f, -0.5f), Vector2(0.5f, 0.5f), false)
+    val horizontalBlurTarget = RenderTarget(960, 540, AttachmentType.COLOR_TEXTURE)
+    val blurredGodRayTarget = RenderTarget(960, 540, AttachmentType.COLOR_TEXTURE)
+
+    val combinedTarget = RenderTarget(960, 540, AttachmentType.COLOR_TEXTURE)
+
+    val horizontalBlur = HorizontalBlur(5.0f)
+    val verticalBlur = VerticalBlur(5.0f)
+    val overlayEffect = Overlay()
 
     while (window.running) {
 
@@ -77,15 +91,20 @@ fun main() {
 
         val godRays = GodRayRenderer.render(camera, shadows, target, godRayBox)
 
+        horizontalBlur.apply(godRays, horizontalBlurTarget)
+        verticalBlur.apply(horizontalBlurTarget, blurredGodRayTarget)
+        overlayEffect.overlay = blurredGodRayTarget.getColorMap()
+        overlayEffect.apply(target, combinedTarget)
+
         userInterfaceTarget.start()
         userInterfaceTarget.clear()
 
         uiProgram.start()
 
-        standardTexture.render(uiProgram, target.getColorMap().handle)
-        shadowMapTexture.render(uiProgram, shadows[0].shadowMap.handle)
-        depthTexture.render(uiProgram, target.getDepthMap().handle)
-        godRayTexture.render(uiProgram, godRays.getColorMap().handle)
+//        standardTexture.render(uiProgram, target.getColorMap().handle)
+//        shadowMapTexture.render(uiProgram, shadows[0].shadowMap.handle)
+        depthTexture.render(uiProgram, combinedTarget.getColorMap().handle)
+//        godRayTexture.render(uiProgram, blurredGodRayTarget.getColorMap().handle)
 
         uiProgram.stop()
 
