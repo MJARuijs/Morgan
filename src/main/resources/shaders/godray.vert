@@ -28,5 +28,5 @@ void main() {
     distance /= transitionDistance;
     shadowCoords.w = clamp(distance, 0.0, 1.0);
 
-    gl_Position = vec4(inPosition, 1.0);
+    gl_Position = projection * view * worldPosition;
 }

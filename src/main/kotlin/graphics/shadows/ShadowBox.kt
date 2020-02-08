@@ -136,6 +136,8 @@ class ShadowBox(camera: Camera, val maxDistance: Float = 10f) {
         val maxFarZ = max(farLeftDown.z, max(farRightDown.z, max(farLeftUp.z, farRightUp.z)))
         maxZ = max(maxNearZ, maxFarZ)
 
+
+
         nearRightUp = (inverseLightDirection dot Vector4(nearRightUp, 1.0f)).xyz()
         nearLeftUp = (inverseLightDirection dot Vector4(nearLeftUp, 1.0f)).xyz()
         nearLeftDown = (inverseLightDirection dot Vector4(nearLeftDown, 1.0f)).xyz()

@@ -6,6 +6,7 @@ import com.blazeit.game.graphics.Camera
 import com.blazeit.game.graphics.GraphicsContext
 import com.blazeit.game.graphics.GraphicsOption.*
 import com.blazeit.game.graphics.Texture
+import com.blazeit.game.graphics.godrays.GodRayBox
 import com.blazeit.game.graphics.godrays.GodRayRenderer
 import com.blazeit.game.graphics.lights.AmbientLight
 import com.blazeit.game.graphics.lights.DirectionalLight
@@ -23,7 +24,6 @@ import com.blazeit.game.math.vectors.Vector4
 import devices.Key
 import devices.Timer
 import devices.Window
-import org.lwjgl.opengl.GL11.*
 
 fun main() {
 
@@ -32,7 +32,7 @@ fun main() {
     val mouse = window.mouse
     val timer = Timer()
 
-    GraphicsContext.init(Color(0.25f, 0.25f, 0.25f))
+    GraphicsContext.init(Color(0.0f, 0.0f, 0.0f))
     GraphicsContext.enable(DEPTH_TESTING, FACE_CULLING, TEXTURE_MAPPING)
 
     val uiProgram = ShaderProgram.load("shaders/user_interface.vert", "shaders/user_interface.frag")
@@ -43,6 +43,8 @@ fun main() {
 
     val box = ShadowBox(camera)
     ShadowRenderer.add(box)
+
+    val godRayBox = GodRayBox(camera, 100)
 
     val entity = Entity(Matrix4(), ModelCache.get("models/house.obj"))
     val entities = ArrayList<Entity>()
@@ -73,7 +75,7 @@ fun main() {
 
         val target = EntityRenderer.render(camera, entities, ambient, light, shadows, Vector4())
 
-        val godRays = GodRayRenderer.render(camera, shadows)
+        val godRays = GodRayRenderer.render(camera, shadows, target, godRayBox)
 
         userInterfaceTarget.start()
         userInterfaceTarget.clear()

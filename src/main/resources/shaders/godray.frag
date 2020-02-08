@@ -13,6 +13,8 @@ uniform mat4 view;
 uniform vec3 cameraPosition;
 uniform vec2 shadowMapSize;
 uniform sampler2D shadowMap;
+uniform sampler2D depthTexture;
+
 uniform int levels;
 
 layout(location = 0) out vec4 outColor;
@@ -37,6 +39,6 @@ void main() {
     shadowValue /= samplesPerPixel;
     float lightFactor = 1.0 - (shadowValue * shadowCoords.w);
 
-    outColor = vec4(1.0, 1.0, 1.0, 1.0 / levels) * lightFactor;
+    outColor = vec4(1.0, 1.0, 1.0, (1.0 / levels) * lightFactor);
     outColor = clamp(outColor, 0.0, 1.0);
 }
